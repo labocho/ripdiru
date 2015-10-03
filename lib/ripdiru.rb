@@ -34,13 +34,13 @@ module Ripdiru
     def channel
       case station
         when "NHK1"
-          @aspx="http://mfile.akamai.com/129931/live/reflector:46032.asx"
+          @playlist="http://netradior1p-i.akamaihd.net/hls/live/200452/1-r1/1-r1-01.m3u8"
           @mms_ch="netr1"
         when "NHK2"
-          @aspx="http://mfile.akamai.com/129932/live/reflector:46056.asx"
+          @playlist="http://netradior2p-i.akamaihd.net/hls/live/200454/1-r2/1-r2-01.m3u8"
           @mms_ch="netr2"
         when "FM"
-          @aspx="http://mfile.akamai.com/129933/live/reflector:46051.asx"
+          @playlist="http://netradiofmp-i.akamaihd.net/hls/live/200456/1-fm/1-fm-01.m3u8"
           @mms_ch="netfm"
         else
           puts "invalid channel"
@@ -78,14 +78,6 @@ module Ripdiru
       end
     end
 
-    def mms_url
-      f = open(@aspx)
-      doc = REXML::Document.new(f)
-
-      mms_url =  REXML::XPath.first(doc, "//ENTRY/REF").attribute("HREF").to_s
-      mms_url.sub!("mms://", "mmsh://")
-    end
-
     def run
       program = now_playing(station)
 
@@ -96,7 +88,7 @@ module Ripdiru
       puts "Ripping audio file to #{tempfile}"
 
       command = %W(
-        ffmpeg -y -i #{mms_url} -vn
+        ffmpeg -y -i #{@playlist} -vn
         -loglevel error
         -metadata author="NHK"
         -metadata artist="#{program.station}"
