@@ -37,7 +37,7 @@ module Ripdiru
           @playlist="https://nhkradioakr1-i.akamaihd.net/hls/live/511633/1-r1/1-r1-01.m3u8"
           @mms_ch="netr1"
         when "NHK2"
-          @playlist="https://netradioakr2-i.akamaihd.net/hls/live/511929/1-r2/1-r2-01.m3u8"
+          @playlist="https://nhkradioakr2-i.akamaihd.net/hls/live/511929/1-r2/1-r2-01.m3u8"
           @mms_ch="netr2"
         when "FM"
           @playlist="https://nhkradioakfm-i.akamaihd.net/hls/live/512290/1-fm/1-fm-01.m3u8"
