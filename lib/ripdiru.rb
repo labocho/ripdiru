@@ -34,13 +34,13 @@ module Ripdiru
     def channel
       case station
         when "NHK1"
-          @playlist="http://netradioakr1-i.akamaihd.net/hls/live/263844/1-r1/1-r1-01.m3u8"
+          @playlist="https://nhkradioakr1-i.akamaihd.net/hls/live/511633/1-r1/1-r1-01.m3u8"
           @mms_ch="netr1"
         when "NHK2"
-          @playlist="http://netradioakr2-i.akamaihd.net/hls/live/263845/1-r2/1-r2-01.m3u8"
+          @playlist="https://netradioakr2-i.akamaihd.net/hls/live/511929/1-r2/1-r2-01.m3u8"
           @mms_ch="netr2"
         when "FM"
-          @playlist="http://netradioakfm-i.akamaihd.net/hls/live/263846/1-fm/1-fm-01.m3u8"
+          @playlist="https://nhkradioakfm-i.akamaihd.net/hls/live/512290/1-fm/1-fm-01.m3u8"
           @mms_ch="netfm"
         else
           puts "invalid channel"
