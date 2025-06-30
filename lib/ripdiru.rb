@@ -1,14 +1,13 @@
 #!/usr/bin/env ruby
 
 require "ripdiru/version"
-require 'net/https'
-require 'rexml/document'
 require 'uri'
 require 'pathname'
-require 'base64'
 require 'open-uri'
 require 'date'
 require 'fileutils'
+require 'json'
+require 'active_support/duration'
 
 module Ripdiru
   class DownloadTask
@@ -35,47 +34,39 @@ module Ripdiru
       case station
         when "NHK1"
           @playlist="https://radio-stream.nhk.jp/hls/live/2023507/nhkradiruakr1/master48k.m3u8"
-          @mms_ch="netr1"
         when "NHK2"
           @playlist="https://radio-stream.nhk.jp/hls/live/2023507/nhkradiruakr2/master48k.m3u8"
-          @mms_ch="netr2"
         when "FM"
           @playlist="https://radio-stream.nhk.jp/hls/live/2023507/nhkradiruakfm/master48k.m3u8"
-          @mms_ch="netfm"
         else
           puts "invalid channel"
       end
     end
 
-    def val(element, path)
-      element.get_text(path)
-    end
-
-    def parse_time(str)
-      DateTime.strptime("#{str}+0900", "%Y-%m-%d %H:%M:%S%Z").to_time
-    end
-
     def now_playing(station)
       now = Time.now
 
-      f = open(SCHEDULE_URL)
-      xml = REXML::Document.new(f)
-
-      REXML::XPath.each(xml, "//item") do |item|
-        if val(item, "ch") == @mms_ch && val(item, "index") == '0'
-          from, to = parse_time(val(item, "starttime")), parse_time(val(item, "endtime"))
-          start_time = now.to_i + buffer
-          return Program.new(
-            id: now.strftime("%Y%m%d%H%M%S") + "-#{station}",
-            station: station,
-            title: val(item, "title"),
-            from: from,
-            to: to,
-            duration: to.to_i - from.to_i,
-            info: val(item, "link"),
-          )
-        end
+      json = JSON.parse(URI.open("https://api.nhk.jp/r7/pg/now/radio/130/now.json", &:read))
+      key = case station
+      when "NHK1"
+        "r1"
+      when "NHK2"
+        "r2"
+      when "FM"
+        "r3"
       end
+
+      program = json.fetch(key).fetch("present")
+
+      Program.new(
+        id: now.strftime("%Y%m%d%H%M%S") + "-#{station}",
+        station: station,
+        title: program.fetch("name"),
+        from: Time.parse(program.fetch("startDate")),
+        to: Time.parse(program.fetch("endDate")),
+        duration: ActiveSupport::Duration.parse(program.fetch("duration")).to_i,
+        info: program.fetch("url"),
+      )
     end
 
     def run
