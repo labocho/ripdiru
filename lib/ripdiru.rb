@@ -97,7 +97,7 @@ module Ripdiru
       system command.join(" ")
 
       FileUtils.mkpath(outdir)
-      File.rename tempfile, "#{outdir}/#{program.id}.mp3"
+      FileUtils.mv tempfile, "#{outdir}/#{program.id}.mp3"
 
     end
 
