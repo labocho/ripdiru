@@ -56,7 +56,11 @@ module Ripdiru
         "r3"
       end
 
-      program = json.fetch(key).fetch("present")
+      present = json.fetch(key).fetch("present")
+      following = json.fetch(key).fetch("following")
+
+      t = now + buffer
+      program = Time.parse(following.fetch("startDate")) <= t ? following : present
 
       Program.new(
         id: now.strftime("%Y%m%d%H%M%S") + "-#{station}",
