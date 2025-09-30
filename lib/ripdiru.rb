@@ -33,11 +33,11 @@ module Ripdiru
     def channel
       case station
         when "NHK1"
-          @playlist="https://radio-stream.nhk.jp/hls/live/2023507/nhkradiruakr1/master48k.m3u8"
+          @playlist="https://simul.drdi.st.nhk/live/3/joined/master.m3u8"
         when "NHK2"
-          @playlist="https://radio-stream.nhk.jp/hls/live/2023507/nhkradiruakr2/master48k.m3u8"
+          @playlist="https://simul.drdi.st.nhk/live/4/joined/master.m3u8"
         when "FM"
-          @playlist="https://radio-stream.nhk.jp/hls/live/2023507/nhkradiruakfm/master48k.m3u8"
+          @playlist="https://simul.drdi.st.nhk/live/5/joined/master.m3u8"
         else
           puts "invalid channel"
       end
